@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+task.json
+tasks.json
+.pytest.json
+DS_Store
