@@ -38,11 +38,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def cmd_add(args, tasks, path):
+    title = args.title.strip()
+    if not title:
+        print("Error: task title cannot be empty.", file=sys.stderr)
+        sys.exit(1)
     task_id = next_id(tasks)
     from .models import Task
-    tasks.append(Task(id=task_id, title=args.title))
+    tasks.append(Task(id=task_id, title=title))
     save_tasks(tasks, path)
-    print(f"Added task {task_id}: {args.title}")
+    print(f"Added task {task_id}: {title}")
 
 
 def cmd_list(args, tasks, path):
