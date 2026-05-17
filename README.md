@@ -22,6 +22,8 @@ After installation, the `task` command is available directly in your terminal.
 ```bash
 task add "Buy groceries"     # Add a new task
 task list                    # List all tasks
+task list --todo             # List only incomplete tasks
+task list --done             # List only completed tasks
 task done 1                  # Mark task 1 as done
 task remove 1                # Remove task 1
 task clear --yes             # Clear all tasks (requires confirmation)
@@ -34,6 +36,8 @@ task --help                  # Show help
 |---------|-------------|
 | `task add <title>` | Add a new task |
 | `task list` | List all tasks |
+| `task list --todo` | List only incomplete tasks |
+| `task list --done` | List only completed tasks |
 | `task done <id>` | Mark a task as done |
 | `task remove <id>` | Remove a task |
 | `task clear --yes` | Clear all tasks |

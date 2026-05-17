@@ -49,6 +49,48 @@ def test_list_shows_tasks(capsys):
     assert "[ ] 2. 写代码" in lines[1]
 
 
+def test_list_todo_only(capsys):
+    main(["add", "买菜"])
+    capsys.readouterr()
+    main(["add", "写代码"])
+    capsys.readouterr()
+    main(["done", "1"])
+    capsys.readouterr()
+    main(["list", "--todo"])
+    out = capsys.readouterr().out
+    assert "买菜" not in out
+    assert "写代码" in out
+
+
+def test_list_done_only(capsys):
+    main(["add", "买菜"])
+    capsys.readouterr()
+    main(["add", "写代码"])
+    capsys.readouterr()
+    main(["done", "1"])
+    capsys.readouterr()
+    main(["list", "--done"])
+    out = capsys.readouterr().out
+    assert "买菜" in out
+    assert "写代码" not in out
+
+
+def test_list_todo_empty(capsys):
+    main(["add", "买菜"])
+    capsys.readouterr()
+    main(["done", "1"])
+    capsys.readouterr()
+    main(["list", "--todo"])
+    assert "No tasks." in capsys.readouterr().out
+
+
+def test_list_done_empty(capsys):
+    main(["add", "买菜"])
+    capsys.readouterr()
+    main(["list", "--done"])
+    assert "No tasks." in capsys.readouterr().out
+
+
 # ── done ─────────────────────────────────────────────────────────────
 
 def test_done_existing_task(capsys):

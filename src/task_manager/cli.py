@@ -16,8 +16,11 @@ def build_parser() -> argparse.ArgumentParser:
     add_parser = subparsers.add_parser("add", help="Add a new task")
     add_parser.add_argument("title", help="Task title")
 
-    # task list
-    subparsers.add_parser("list", help="List all tasks")
+    # task list [--todo | --done]
+    list_parser = subparsers.add_parser("list", help="List all tasks")
+    list_group = list_parser.add_mutually_exclusive_group()
+    list_group.add_argument("--todo", action="store_true", help="Show only incomplete tasks")
+    list_group.add_argument("--done", action="store_true", help="Show only completed tasks")
 
     # task done <id>
     done_parser = subparsers.add_parser("done", help="Mark a task as done")
@@ -43,10 +46,16 @@ def cmd_add(args, tasks, path):
 
 
 def cmd_list(args, tasks, path):
-    if not tasks:
+    filtered = tasks
+    if args.todo:
+        filtered = [t for t in tasks if not t.done]
+    elif args.done:
+        filtered = [t for t in tasks if t.done]
+
+    if not filtered:
         print("No tasks.")
         return
-    for task in tasks:
+    for task in filtered:
         status = "✓" if task.done else " "
         print(f"  [{status}] {task.id}. {task.title}")
 
