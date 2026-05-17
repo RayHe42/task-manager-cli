@@ -1,17 +1,46 @@
 # Task Manager CLI
 
-A simple command-line task manager built with Python. Tasks are stored in a local JSON file.
+A simple command-line task manager built with Python. Tasks are stored in a local JSON file — no database, no server, no external dependencies.
+
+## Why This Project
+
+This is a learning project designed to practice Python engineering fundamentals:
+
+- **CLI development** — building a usable command-line tool with `argparse`
+- **Data modeling** — structuring data with Python `dataclass`
+- **File I/O** — reading and writing JSON with error handling
+- **Testing** — writing unit tests with `pytest`
+- **Project packaging** — using `pyproject.toml` to create an installable CLI command
 
 ## Features
 
 - Add, list, complete, and remove tasks
-- Clear all tasks at once
-- Data stored locally in `tasks.json`
-- No external dependencies (Python standard library only)
+- Filter tasks by status: `--todo` (incomplete) or `--done` (completed)
+- Clear all tasks at once with confirmation
+- Auto-incrementing task IDs
+- Data persisted to local `tasks.json`
+- Graceful error handling for missing or corrupt data files
+- Zero external dependencies — Python standard library only
+
+## Tech Stack
+
+| Component | Choice | Why |
+|-----------|--------|-----|
+| Language | Python 3.10+ | Modern type hints (`list[Task]`) |
+| CLI parsing | `argparse` | Built-in, no extra dependency |
+| Data storage | `json` | Human-readable, easy to debug |
+| Data model | `dataclasses` | Clean structure with `asdict()` serialization |
+| File paths | `pathlib` | Cross-platform path handling |
+| Testing | `pytest` | Simple syntax, powerful fixtures |
 
 ## Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/<your-username>/task-manager-cli.git
+cd task-manager-cli
+
+# Install in development mode
 pip install -e .
 ```
 
@@ -20,17 +49,39 @@ After installation, the `task` command is available directly in your terminal.
 ## Usage
 
 ```bash
-task add "Buy groceries"     # Add a new task
-task list                    # List all tasks
-task list --todo             # List only incomplete tasks
-task list --done             # List only completed tasks
-task done 1                  # Mark task 1 as done
-task remove 1                # Remove task 1
-task clear --yes             # Clear all tasks (requires confirmation)
-task --help                  # Show help
+# Add tasks
+$ task add "Buy groceries"
+Added task 1: Buy groceries
+
+$ task add "Write code"
+Added task 2: Write code
+
+# Mark a task as done
+$ task done 1
+Marked task 1 as done.
+
+# List all tasks
+$ task list
+  [✓] 1. Buy groceries
+  [ ] 2. Write code
+
+# Filter by status
+$ task list --todo
+  [ ] 2. Write code
+
+$ task list --done
+  [✓] 1. Buy groceries
+
+# Remove a task
+$ task remove 1
+Removed task 1.
+
+# Clear all tasks (requires --yes flag)
+$ task clear --yes
+All tasks cleared.
 ```
 
-## Commands
+## Command Reference
 
 | Command | Description |
 |---------|-------------|
@@ -40,30 +91,75 @@ task --help                  # Show help
 | `task list --done` | List only completed tasks |
 | `task done <id>` | Mark a task as done |
 | `task remove <id>` | Remove a task |
-| `task clear --yes` | Clear all tasks |
+| `task clear --yes` | Clear all tasks (confirmation required) |
 | `task --help` | Show help message |
 
 ## Running Tests
 
 ```bash
-pytest
+# Run all tests
+pytest -v
+
+# Run with coverage summary
+pytest --tb=short -q
+
+# Run a specific test file
+pytest tests/test_storage.py -v
+pytest tests/test_cli.py -v
 ```
 
-## Tech Stack
+The project includes **24 tests** covering:
 
-- Python 3.10+
-- argparse (CLI parsing)
-- json (data storage)
-- pytest (testing)
-- pathlib (file paths)
+- `test_storage.py` (8 tests) — load, save, clear, next ID generation, parent directory creation, corrupt JSON handling
+- `test_cli.py` (16 tests) — all CLI commands, status filtering, error cases for nonexistent tasks, combined operations
 
 ## Project Structure
 
 ```
-src/task_manager/
-├── cli.py          # Entry point, parses CLI arguments (argparse)
-├── models.py       # Task data structure
-└── storage.py      # Read/write JSON files
-tests/
-└── test_storage.py # Tests for storage module
+task-manager-cli/
+├── src/task_manager/
+│   ├── __init__.py
+│   ├── cli.py          # Entry point — parses CLI args, dispatches to command handlers
+│   ├── models.py       # Task dataclass with serialization methods
+│   └── storage.py      # JSON file I/O: load, save, clear, ID generation
+├── tests/
+│   ├── test_cli.py     # CLI integration tests (16 tests)
+│   └── test_storage.py # Storage unit tests (8 tests)
+├── pyproject.toml      # Package metadata and CLI entry point
+├── CLAUDE.md           # AI-assisted development guidelines
+└── tasks.json          # Local data file (gitignored)
 ```
+
+**Data flow:**
+
+```
+User types command
+    → cli.py (argparse parses arguments)
+    → storage.py (loads tasks from tasks.json)
+    → command handler (modifies task list)
+    → storage.py (saves back to tasks.json)
+```
+
+## Engineering Practices
+
+- **No external dependencies** — uses only Python standard library + pytest
+- **Type hints** — `list[Task]`, `dict`, return type annotations throughout
+- **Dataclass serialization** — clean `to_dict()` / `from_dict()` pattern
+- **Error handling** — graceful messages for missing files, corrupt JSON, nonexistent task IDs
+- **Test isolation** — each test uses a temporary directory via `tmp_path` fixture
+- **Mutually exclusive flags** — `--todo` and `--done` cannot be used together (enforced by argparse)
+- **Git workflow** — feature branches, meaningful commit messages
+
+## Roadmap
+
+Planned features for future development:
+
+- [ ] Task editing (`task edit <id> "new title"`)
+- [ ] Task search (`task search "keyword"`)
+- [ ] Task priority levels
+- [ ] Due date support
+- [ ] Color-coded terminal output
+
+## License
+
+This project is for learning purposes.
