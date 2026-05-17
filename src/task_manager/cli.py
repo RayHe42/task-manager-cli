@@ -74,7 +74,7 @@ def cmd_remove(args, tasks, path):
 
 def cmd_clear(args, tasks, path):
     if not args.yes:
-        print("Use 'python -m task_manager.cli clear --yes' to confirm.")
+        print("Use 'task clear --yes' to confirm.")
         return
     clear_tasks(path)
     print("All tasks cleared.")
