@@ -24,6 +24,11 @@ def save_tasks(tasks: list[Task], path: Path = DEFAULT_TASKS_FILE) -> None:
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def clear_tasks(path: Path = DEFAULT_TASKS_FILE) -> None:
+    """Clear all tasks by writing an empty list."""
+    save_tasks([], path)
+
+
 def next_id(tasks: list[Task]) -> int:
     """Return the next available task ID."""
     if not tasks:

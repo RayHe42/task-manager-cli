@@ -3,7 +3,7 @@ import pytest
 from pathlib import Path
 
 from src.task_manager.models import Task
-from src.task_manager.storage import load_tasks, save_tasks, next_id
+from src.task_manager.storage import load_tasks, save_tasks, clear_tasks, next_id
 
 
 @pytest.fixture
@@ -44,6 +44,21 @@ def test_load_corrupt_json(tmp_tasks_file):
     tmp_tasks_file.write_text("not valid json")
     with pytest.raises(ValueError, match="Invalid JSON"):
         load_tasks(tmp_tasks_file)
+
+
+def test_clear_tasks(tmp_tasks_file):
+    """clear_tasks removes all tasks."""
+    save_tasks([Task(1, "a"), Task(2, "b")], tmp_tasks_file)
+    clear_tasks(tmp_tasks_file)
+    loaded = load_tasks(tmp_tasks_file)
+    assert loaded == []
+
+
+def test_clear_tasks_empty_file(tmp_tasks_file):
+    """clear_tasks on empty file still results in empty list."""
+    clear_tasks(tmp_tasks_file)
+    loaded = load_tasks(tmp_tasks_file)
+    assert loaded == []
 
 
 def test_next_id_empty():

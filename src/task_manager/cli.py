@@ -2,7 +2,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from .storage import load_tasks, save_tasks, next_id, DEFAULT_TASKS_FILE
+from .storage import load_tasks, save_tasks, clear_tasks, next_id, DEFAULT_TASKS_FILE
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -26,6 +26,10 @@ def build_parser() -> argparse.ArgumentParser:
     # task remove <id>
     remove_parser = subparsers.add_parser("remove", help="Remove a task")
     remove_parser.add_argument("id", type=int, help="Task ID")
+
+    # task clear [--yes]
+    clear_parser = subparsers.add_parser("clear", help="Clear all tasks")
+    clear_parser.add_argument("--yes", action="store_true", help="Confirm clear")
 
     return parser
 
@@ -68,11 +72,20 @@ def cmd_remove(args, tasks, path):
     print(f"Removed task {args.id}.")
 
 
+def cmd_clear(args, tasks, path):
+    if not args.yes:
+        print("Use 'python -m task_manager.cli clear --yes' to confirm.")
+        return
+    clear_tasks(path)
+    print("All tasks cleared.")
+
+
 COMMANDS = {
     "add": cmd_add,
     "list": cmd_list,
     "done": cmd_done,
     "remove": cmd_remove,
+    "clear": cmd_clear,
 }
 
 
