@@ -1,32 +1,65 @@
 # Task Manager CLI
 
-用 Python 写的终端任务管理工具。
+A simple command-line task manager built with Python. Tasks are stored in a local JSON file.
 
-## 功能
+## Features
 
-```
-task add "买菜"              # 添加任务
-task list                    # 列出所有任务
-task done 1                  # 标记任务为完成
-task remove 1                # 删除任务
-```
+- Add, list, complete, and remove tasks
+- Clear all tasks at once
+- Data stored locally in `tasks.json`
+- No external dependencies (Python standard library only)
 
-## 安装
+## Installation
 
 ```bash
 pip install -e .
 ```
 
-## 使用
+After installation, the `task` command is available directly in your terminal.
+
+## Usage
 
 ```bash
-task add "学习 Python"
-task list
-task done 1
+task add "Buy groceries"     # Add a new task
+task list                    # List all tasks
+task done 1                  # Mark task 1 as done
+task remove 1                # Remove task 1
+task clear --yes             # Clear all tasks (requires confirmation)
+task --help                  # Show help
 ```
 
-## 运行测试
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `task add <title>` | Add a new task |
+| `task list` | List all tasks |
+| `task done <id>` | Mark a task as done |
+| `task remove <id>` | Remove a task |
+| `task clear --yes` | Clear all tasks |
+| `task --help` | Show help message |
+
+## Running Tests
 
 ```bash
 pytest
+```
+
+## Tech Stack
+
+- Python 3.10+
+- argparse (CLI parsing)
+- json (data storage)
+- pytest (testing)
+- pathlib (file paths)
+
+## Project Structure
+
+```
+src/task_manager/
+├── cli.py          # Entry point, parses CLI arguments (argparse)
+├── models.py       # Task data structure
+└── storage.py      # Read/write JSON files
+tests/
+└── test_storage.py # Tests for storage module
 ```

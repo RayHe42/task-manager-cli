@@ -20,6 +20,7 @@ task add "买菜"              # 添加任务
 task list                    # 列出所有任务
 task done 1                  # 标记任务为完成
 task remove 1                # 删除任务
+task clear --yes             # 清空所有任务
 ```
 
 ## 文件结构
@@ -27,12 +28,13 @@ task remove 1                # 删除任务
 ```
 src/task_manager/
 ├── cli.py          # 入口，解析命令行参数（argparse）
-├── storage.py      # 读写 JSON 文件
-└── models.py       # Task 数据结构
+├── models.py       # Task 数据结构
+└── storage.py      # 读写 JSON 文件
 tests/
-├── test_cli.py
-└── test_storage.py
+└── test_storage.py # storage 模块的测试（已实现）
 ```
+
+> `tests/test_cli.py` 尚未创建，计划后续补充 CLI 层的测试。
 
 ## 开发命令
 
@@ -51,7 +53,7 @@ pytest
 pytest tests/test_storage.py
 
 # 测试单个函数
-pytest tests/test_storage.py::test_add_task
+pytest tests/test_storage.py::test_save_and_load
 ```
 
 ## 技术栈
