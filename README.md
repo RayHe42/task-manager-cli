@@ -17,6 +17,7 @@ This is a learning project designed to practice Python engineering fundamentals:
 - Add, list, complete, and remove tasks
 - Filter tasks by status: `--todo` (incomplete) or `--done` (completed)
 - Clear all tasks at once with confirmation
+- Input validation — rejects empty or whitespace-only task titles
 - Auto-incrementing task IDs
 - Data persisted to local `tasks.json`
 - Graceful error handling for missing or corrupt data files
@@ -55,6 +56,13 @@ Added task 1: Buy groceries
 
 $ task add "Write code"
 Added task 2: Write code
+
+# Empty titles are rejected
+$ task add ""
+Error: task title cannot be empty.
+
+$ task add "   "
+Error: task title cannot be empty.
 
 # Mark a task as done
 $ task done 1
@@ -108,10 +116,10 @@ pytest tests/test_storage.py -v
 pytest tests/test_cli.py -v
 ```
 
-The project includes **24 tests** covering:
+The project includes **29 tests** covering:
 
 - `test_storage.py` (8 tests) — load, save, clear, next ID generation, parent directory creation, corrupt JSON handling
-- `test_cli.py` (16 tests) — all CLI commands, status filtering, error cases for nonexistent tasks, combined operations
+- `test_cli.py` (21 tests) — all CLI commands, input validation, status filtering, error cases for nonexistent tasks, combined operations
 
 ## Project Structure
 
@@ -123,7 +131,7 @@ task-manager-cli/
 │   ├── models.py       # Task dataclass with serialization methods
 │   └── storage.py      # JSON file I/O: load, save, clear, ID generation
 ├── tests/
-│   ├── test_cli.py     # CLI integration tests (16 tests)
+│   ├── test_cli.py     # CLI integration tests (21 tests)
 │   └── test_storage.py # Storage unit tests (8 tests)
 ├── pyproject.toml      # Package metadata and CLI entry point
 ├── CLAUDE.md           # AI-assisted development guidelines

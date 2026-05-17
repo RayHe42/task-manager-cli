@@ -29,6 +29,45 @@ def test_add_multiple_tasks_increments_id(capsys):
     assert "Added task 2" in out
 
 
+def test_add_empty_title_fails(capsys):
+    """task add "" should reject empty title."""
+    with pytest.raises(SystemExit) as exc:
+        main(["add", ""])
+    assert exc.value.code == 1
+    assert "cannot be empty" in capsys.readouterr().err
+
+
+def test_add_whitespace_only_title_fails(capsys):
+    """task add "   " should reject whitespace-only title."""
+    with pytest.raises(SystemExit) as exc:
+        main(["add", "   "])
+    assert exc.value.code == 1
+    assert "cannot be empty" in capsys.readouterr().err
+
+
+def test_add_tab_only_title_fails(capsys):
+    """task add with only tab characters should fail."""
+    with pytest.raises(SystemExit) as exc:
+        main(["add", "\t"])
+    assert exc.value.code == 1
+    assert "cannot be empty" in capsys.readouterr().err
+
+
+def test_add_empty_title_does_not_create_task(capsys):
+    """Empty title should not create any task."""
+    with pytest.raises(SystemExit):
+        main(["add", ""])
+    main(["list"])
+    assert "No tasks." in capsys.readouterr().out
+
+
+def test_add_title_with_surrounding_spaces_succeeds(capsys):
+    """task add "  买菜  " should succeed — strip preserves inner content."""
+    main(["add", "  买菜  "])
+    out = capsys.readouterr().out
+    assert "Added task 1: 买菜" in out
+
+
 # ── list ─────────────────────────────────────────────────────────────
 
 def test_list_empty(capsys):
