@@ -1,6 +1,28 @@
-.venv/
+# Python cache
 __pycache__/
-task.json
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+
+# Local data
 tasks.json
-.pytest.json
-DS_Store
+
+# Environment variables
+.env
+.env.*
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
