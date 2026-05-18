@@ -33,19 +33,34 @@ This is a learning project designed to practice Python engineering fundamentals:
 | Data model | `dataclasses` | Clean structure with `asdict()` serialization |
 | File paths | `pathlib` | Cross-platform path handling |
 | Testing | `pytest` | Simple syntax, powerful fixtures |
+| Container | Docker | Reproducible environment, no local Python needed |
 
 ## Installation
 
+### With pip (recommended for development)
+
 ```bash
-# Clone the repository
 git clone https://github.com/<your-username>/task-manager-cli.git
 cd task-manager-cli
-
-# Install in development mode
 pip install -e .
 ```
 
 After installation, the `task` command is available directly in your terminal.
+
+### With Docker
+
+```bash
+git clone https://github.com/<your-username>/task-manager-cli.git
+cd task-manager-cli
+docker build -t task-manager .
+docker run --rm task-manager
+```
+
+To run tests in Docker:
+
+```bash
+docker run --rm task-manager pytest -q
+```
 
 ## Usage
 
@@ -133,6 +148,8 @@ task-manager-cli/
 ├── tests/
 │   ├── test_cli.py     # CLI integration tests (21 tests)
 │   └── test_storage.py # Storage unit tests (8 tests)
+├── Dockerfile          # Docker image definition
+├── .dockerignore       # Files excluded from Docker build
 ├── pyproject.toml      # Package metadata and CLI entry point
 ├── CLAUDE.md           # AI-assisted development guidelines
 └── tasks.json          # Local data file (gitignored)
