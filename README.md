@@ -62,6 +62,16 @@ To run tests in Docker:
 docker run --rm task-manager pytest -q
 ```
 
+To persist tasks across container runs, use a named volume:
+
+```bash
+# Add a task (data saved to Docker volume)
+docker run --rm -v task-data:/data -e TASK_MANAGER_DATA_FILE=/data/tasks.json task-manager task add "Learn Docker"
+
+# List tasks (data persists between runs)
+docker run --rm -v task-data:/data -e TASK_MANAGER_DATA_FILE=/data/tasks.json task-manager task list
+```
+
 ## Usage
 
 ```bash
@@ -131,10 +141,10 @@ pytest tests/test_storage.py -v
 pytest tests/test_cli.py -v
 ```
 
-The project includes **29 tests** covering:
+The project includes **32 tests** covering:
 
 - `test_storage.py` (8 tests) — load, save, clear, next ID generation, parent directory creation, corrupt JSON handling
-- `test_cli.py` (21 tests) — all CLI commands, input validation, status filtering, error cases for nonexistent tasks, combined operations
+- `test_cli.py` (24 tests) — all CLI commands, input validation, environment variable config, status filtering, error cases for nonexistent tasks, combined operations
 
 ## Project Structure
 
@@ -146,7 +156,7 @@ task-manager-cli/
 │   ├── models.py       # Task dataclass with serialization methods
 │   └── storage.py      # JSON file I/O: load, save, clear, ID generation
 ├── tests/
-│   ├── test_cli.py     # CLI integration tests (21 tests)
+│   ├── test_cli.py     # CLI integration tests (24 tests)
 │   └── test_storage.py # Storage unit tests (8 tests)
 ├── Dockerfile          # Docker image definition
 ├── .dockerignore       # Files excluded from Docker build

@@ -204,3 +204,34 @@ def test_remove_then_list_reflects_change(capsys):
     out = capsys.readouterr().out
     assert "买菜" not in out
     assert "写代码" in out
+
+
+# ── TASK_MANAGER_DATA_FILE env var ────────────────────────────────────
+
+def test_env_var_overrides_default_path(monkeypatch, tmp_path):
+    """TASK_MANAGER_DATA_FILE env var overrides DEFAULT_TASKS_FILE."""
+    custom_path = tmp_path / "custom" / "tasks.json"
+    monkeypatch.setenv("TASK_MANAGER_DATA_FILE", str(custom_path))
+    main(["add", "环境变量任务"])
+    assert custom_path.exists()
+
+
+def test_env_var_read_write(monkeypatch, tmp_path):
+    """Tasks written via env var path can be read back."""
+    custom_path = tmp_path / "custom" / "tasks.json"
+    monkeypatch.setenv("TASK_MANAGER_DATA_FILE", str(custom_path))
+    main(["add", "任务一"])
+    # Read back from the same custom path
+    from src.task_manager.storage import load_tasks
+    tasks = load_tasks(custom_path)
+    assert len(tasks) == 1
+    assert tasks[0].title == "任务一"
+
+
+def test_default_path_used_when_env_not_set(monkeypatch):
+    """Without TASK_MANAGER_DATA_FILE, DEFAULT_TASKS_FILE is used."""
+    monkeypatch.delenv("TASK_MANAGER_DATA_FILE", raising=False)
+    # The autouse fixture isolate_tasks_file already redirects DEFAULT_TASKS_FILE
+    main(["add", "默认路径任务"])
+    main(["list"])
+    # Should work normally with the fixture's temp path

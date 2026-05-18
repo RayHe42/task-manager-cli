@@ -176,7 +176,7 @@ task-manager-cli/
 │   ├── models.py       # Task dataclass with serialization methods
 │   └── storage.py      # JSON file I/O: load, save, clear, ID generation
 ├── tests/
-│   ├── test_cli.py     # CLI integration tests (21 tests)
+│   ├── test_cli.py     # CLI integration tests (24 tests)
 │   └── test_storage.py # Storage unit tests (8 tests)
 ├── docs/
 │   └── dev-setup.md    # This file
@@ -346,14 +346,53 @@ You should see:
 29 passed in 0.04s
 ```
 
-### Things to know
+### Persist tasks with Docker volumes
 
-- The container is temporary (`--rm` flag deletes it after each run).
-- Your local `tasks.json` is not shared with the container. Tasks created inside Docker are lost when the container is removed.
-- If you want to persist tasks, mount a volume:
+By default, tasks are stored inside the container and lost when the container is removed. To persist tasks, use a Docker named volume and the `TASK_MANAGER_DATA_FILE` environment variable.
+
+**Using a named volume (recommended):**
 
 ```bash
-docker run --rm -v $(pwd)/tasks.json:/app/tasks.json task-manager task add "Persistent task"
+# Add a task
+docker run --rm \
+  -v task-data:/data \
+  -e TASK_MANAGER_DATA_FILE=/data/tasks.json \
+  task-manager task add "Learn Docker"
+
+# List tasks — data persists between runs
+docker run --rm \
+  -v task-data:/data \
+  -e TASK_MANAGER_DATA_FILE=/data/tasks.json \
+  task-manager task list
+```
+
+**Using a bind mount (for local file access):**
+
+```bash
+# Create the data file on your host machine first
+touch tasks.json
+
+# Mount your local file into the container
+docker run --rm \
+  -v $(pwd)/tasks.json:/data/tasks.json \
+  -e TASK_MANAGER_DATA_FILE=/data/tasks.json \
+  task-manager task add "Persistent task"
+
+# View the data on your host
+cat tasks.json
+```
+
+**Manage the named volume:**
+
+```bash
+# List Docker volumes
+docker volume ls
+
+# Inspect the volume (see where data is stored)
+docker volume inspect task-data
+
+# Delete the volume (removes all tasks)
+docker volume rm task-data
 ```
 
 ## Tech Stack Reference

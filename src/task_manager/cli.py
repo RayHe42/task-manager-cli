@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -110,7 +111,8 @@ def main(argv=None):
         parser.print_help()
         sys.exit(0)
 
-    path = DEFAULT_TASKS_FILE
+    env_path = os.environ.get("TASK_MANAGER_DATA_FILE")
+    path = Path(env_path) if env_path else DEFAULT_TASKS_FILE
     tasks = load_tasks(path)
     COMMANDS[args.command](args, tasks, path)
 
