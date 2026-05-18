@@ -1,0 +1,9 @@
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+tasks.json
+.DS_Store
+.vscode
+.idea

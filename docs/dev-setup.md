@@ -180,6 +180,8 @@ task-manager-cli/
 │   └── test_storage.py # Storage unit tests (8 tests)
 ├── docs/
 │   └── dev-setup.md    # This file
+├── Dockerfile          # Docker image definition
+├── .dockerignore       # Files excluded from Docker build
 ├── pyproject.toml      # Package metadata and CLI entry point
 ├── CLAUDE.md           # AI-assisted development guidelines
 └── tasks.json          # Local data file (gitignored)
@@ -309,6 +311,50 @@ python -m venv .venv
 ### Tests pass locally but CI fails
 
 **Cause:** Not applicable yet — this project does not have CI configured.
+
+## Docker (Optional)
+
+If you have Docker installed, you can build and run the project without setting up a local Python environment.
+
+### Build the image
+
+```bash
+docker build -t task-manager .
+```
+
+### Run the CLI
+
+```bash
+# Show help (default command)
+docker run --rm task-manager
+
+# Run a specific command
+docker run --rm task-manager task add "Learn Docker"
+docker run --rm task-manager task list
+```
+
+### Run tests
+
+```bash
+docker run --rm task-manager pytest -q
+```
+
+You should see:
+
+```
+.............................                            [100%]
+29 passed in 0.04s
+```
+
+### Things to know
+
+- The container is temporary (`--rm` flag deletes it after each run).
+- Your local `tasks.json` is not shared with the container. Tasks created inside Docker are lost when the container is removed.
+- If you want to persist tasks, mount a volume:
+
+```bash
+docker run --rm -v $(pwd)/tasks.json:/app/tasks.json task-manager task add "Persistent task"
+```
 
 ## Tech Stack Reference
 
