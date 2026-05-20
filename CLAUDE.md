@@ -32,6 +32,7 @@ src/task_manager/
 └── storage.py      # 读写 JSON 文件
 tests/
 └── test_storage.py # storage 模块的测试（已实现）
+Makefile            # 常用开发命令快捷方式
 compose.yaml        # Docker Compose 配置，简化容器命令
 ```
 
@@ -57,9 +58,19 @@ pytest tests/test_storage.py
 pytest tests/test_storage.py::test_save_and_load
 
 # Docker Compose（推荐，自动持久化数据到 volume）
-docker compose run --rm task add "买菜"
-docker compose run --rm task list
+docker compose run --rm task task add "买菜"
+docker compose run --rm task task list
 docker compose run --rm task pytest -q
+
+# Makefile 快捷命令（优先使用）
+make                      # 查看所有可用 target
+make install              # 开发模式安装
+make test                 # 运行全部测试
+make compose-list         # Docker 内列出任务
+make compose-add TITLE="买菜" # Docker 内添加任务
+make compose-build        # Docker Compose 构建镜像
+make docker-build         # Docker 构建镜像
+make clean                # 清理缓存
 ```
 
 ## 技术栈

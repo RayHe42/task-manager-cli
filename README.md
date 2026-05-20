@@ -36,6 +36,23 @@ This is a learning project designed to practice Python engineering fundamentals:
 | Container | Docker | Reproducible environment, no local Python needed |
 | Orchestration | Docker Compose | Simplified container commands with persistent volumes |
 
+## Quick Commands (Make)
+
+If you have `make` installed, common tasks are wrapped in a Makefile:
+
+```bash
+make                      # Show all available commands
+make install              # Install in dev mode
+make test                 # Run all tests
+make clean                # Remove __pycache__ and .pytest_cache
+make docker-build         # Build Docker image
+make compose-build        # Build with Docker Compose
+make compose-list         # List tasks (inside Docker)
+make compose-add TITLE="Buy groceries"   # Add a task (inside Docker)
+make compose-down         # Stop containers (keep data)
+make compose-down-volumes # Stop containers and delete all task data
+```
+
 ## Installation
 
 ### With pip (recommended for development)
@@ -79,19 +96,19 @@ Docker Compose simplifies the commands — no need to remember volume and enviro
 
 ```bash
 # Add a task
-docker compose run --rm task add "Learn Docker"
+docker compose run --rm task task add "Learn Docker"
 
 # List tasks
-docker compose run --rm task list
+docker compose run --rm task task list
 
 # Mark a task as done
-docker compose run --rm task done 1
+docker compose run --rm task task done 1
 
 # Remove a task
-docker compose run --rm task remove 1
+docker compose run --rm task task remove 1
 
 # Clear all tasks
-docker compose run --rm task clear --yes
+docker compose run --rm task task clear --yes
 
 # Run tests
 docker compose run --rm task pytest -q
@@ -189,6 +206,7 @@ task-manager-cli/
 │   └── test_storage.py # Storage unit tests (8 tests)
 ├── Dockerfile          # Docker image definition
 ├── compose.yaml        # Docker Compose configuration
+├── Makefile            # Common development commands
 ├── .dockerignore       # Files excluded from Docker build
 ├── pyproject.toml      # Package metadata and CLI entry point
 ├── CLAUDE.md           # AI-assisted development guidelines
