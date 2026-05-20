@@ -192,6 +192,16 @@ The project includes **32 tests** covering:
 - `test_storage.py` (8 tests) — load, save, clear, next ID generation, parent directory creation, corrupt JSON handling
 - `test_cli.py` (24 tests) — all CLI commands, input validation, environment variable config, status filtering, error cases for nonexistent tasks, combined operations
 
+## CI
+
+Every push and pull request triggers a GitHub Actions workflow that:
+
+1. Sets up Python 3.11 on Ubuntu
+2. Installs dependencies from `requirements.txt` and `pyproject.toml`
+3. Runs `make test`
+
+You can see the workflow status in the **Actions** tab of the GitHub repository.
+
 ## Project Structure
 
 ```
@@ -232,6 +242,7 @@ User types command
 - **Test isolation** — each test uses a temporary directory via `tmp_path` fixture
 - **Mutually exclusive flags** — `--todo` and `--done` cannot be used together (enforced by argparse)
 - **Git workflow** — feature branches, meaningful commit messages
+- **CI** — GitHub Actions runs `make test` on every push and pull request
 
 ## Roadmap
 
