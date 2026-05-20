@@ -34,6 +34,7 @@ This is a learning project designed to practice Python engineering fundamentals:
 | File paths | `pathlib` | Cross-platform path handling |
 | Testing | `pytest` | Simple syntax, powerful fixtures |
 | Container | Docker | Reproducible environment, no local Python needed |
+| Orchestration | Docker Compose | Simplified container commands with persistent volumes |
 
 ## Installation
 
@@ -71,6 +72,34 @@ docker run --rm -v task-data:/data -e TASK_MANAGER_DATA_FILE=/data/tasks.json ta
 # List tasks (data persists between runs)
 docker run --rm -v task-data:/data -e TASK_MANAGER_DATA_FILE=/data/tasks.json task-manager task list
 ```
+
+### With Docker Compose (recommended)
+
+Docker Compose simplifies the commands — no need to remember volume and environment variable flags every time.
+
+```bash
+# Add a task
+docker compose run --rm task add "Learn Docker"
+
+# List tasks
+docker compose run --rm task list
+
+# Mark a task as done
+docker compose run --rm task done 1
+
+# Remove a task
+docker compose run --rm task remove 1
+
+# Clear all tasks
+docker compose run --rm task clear --yes
+
+# Run tests
+docker compose run --rm task pytest -q
+```
+
+The `--rm` flag automatically removes the container after each command. Task data is persisted in a Docker volume (`task-manager-data`), so your tasks survive across runs.
+
+> **Note:** `docker compose down -v` deletes the volume and all task data. Use `docker compose down` (without `-v`) if you just want to stop containers.
 
 ## Usage
 
@@ -159,6 +188,7 @@ task-manager-cli/
 │   ├── test_cli.py     # CLI integration tests (24 tests)
 │   └── test_storage.py # Storage unit tests (8 tests)
 ├── Dockerfile          # Docker image definition
+├── compose.yaml        # Docker Compose configuration
 ├── .dockerignore       # Files excluded from Docker build
 ├── pyproject.toml      # Package metadata and CLI entry point
 ├── CLAUDE.md           # AI-assisted development guidelines

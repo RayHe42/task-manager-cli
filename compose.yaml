@@ -1,0 +1,10 @@
+services:
+  task:
+    build: .
+    volumes:
+      - task-manager-data:/data
+    environment:
+      - TASK_MANAGER_DATA_FILE=/data/tasks.json
+
+volumes:
+  task-manager-data:

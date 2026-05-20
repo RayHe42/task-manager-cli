@@ -32,6 +32,7 @@ src/task_manager/
 └── storage.py      # 读写 JSON 文件
 tests/
 └── test_storage.py # storage 模块的测试（已实现）
+compose.yaml        # Docker Compose 配置，简化容器命令
 ```
 
 > `tests/test_cli.py` 尚未创建，计划后续补充 CLI 层的测试。
@@ -54,6 +55,11 @@ pytest tests/test_storage.py
 
 # 测试单个函数
 pytest tests/test_storage.py::test_save_and_load
+
+# Docker Compose（推荐，自动持久化数据到 volume）
+docker compose run --rm task add "买菜"
+docker compose run --rm task list
+docker compose run --rm task pytest -q
 ```
 
 ## 技术栈
