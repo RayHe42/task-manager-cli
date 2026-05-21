@@ -2,6 +2,8 @@
 
 A simple command-line task manager built with Python. Tasks are stored in a local JSON file — no database, no server, no external dependencies.
 
+> **Current version: v0.2.0** — see [CHANGELOG.md](CHANGELOG.md) for release history.
+
 ## Why This Project
 
 This is a learning project designed to practice Python engineering fundamentals:
