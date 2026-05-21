@@ -4,6 +4,17 @@ A simple command-line task manager built with Python. Tasks are stored in a loca
 
 > **Current version: v0.2.0** — see [CHANGELOG.md](CHANGELOG.md) for release history.
 
+## Project Status
+
+| Item | Status |
+|------|--------|
+| Version | v0.2.0 |
+| Tests | 32 passing (8 storage + 24 CLI) |
+| CI | GitHub Actions on every push and PR |
+| Dependencies | Zero (Python standard library only) |
+| Python | 3.10+ |
+| Container | Docker + Docker Compose ready |
+
 ## Why This Project
 
 This is a learning project designed to practice Python engineering fundamentals:
@@ -235,16 +246,43 @@ User types command
     → storage.py (saves back to tasks.json)
 ```
 
-## Engineering Practices
+## Engineering Highlights
 
-- **No external dependencies** — uses only Python standard library + pytest
-- **Type hints** — `list[Task]`, `dict`, return type annotations throughout
-- **Dataclass serialization** — clean `to_dict()` / `from_dict()` pattern
-- **Error handling** — graceful messages for missing files, corrupt JSON, nonexistent task IDs
-- **Test isolation** — each test uses a temporary directory via `tmp_path` fixture
-- **Mutually exclusive flags** — `--todo` and `--done` cannot be used together (enforced by argparse)
-- **Git workflow** — feature branches, meaningful commit messages
-- **CI** — GitHub Actions runs `make test` on every push and pull request
+### Three-layer architecture
+
+```
+cli.py          → Parses commands, dispatches to handlers
+storage.py      → Reads/writes JSON, manages IDs
+models.py       → Defines Task dataclass
+```
+
+Each layer has a single responsibility. `cli.py` never touches JSON directly. `storage.py` never prints to the terminal. This makes the code easy to test, easy to change, and easy to explain.
+
+### Zero external dependencies
+
+The entire project uses only Python standard library. This was a deliberate constraint: if I can't build it with built-in tools, I don't understand the fundamentals well enough. The only non-standard dependency is pytest (for testing).
+
+### Test isolation
+
+Every test runs in its own temporary directory via `tmp_path`. CLI tests use `monkeypatch` to redirect the storage path. No test reads or writes to the real `tasks.json`. Tests can run in parallel without conflicts.
+
+### Docker Compose with volume persistence
+
+Tasks persist across container runs using a named Docker volume. The `TASK_MANAGER_DATA_FILE` environment variable tells the app where to store data inside the container.
+
+### CI on every push
+
+GitHub Actions runs `make test` on every push and pull request. If a change breaks a test, I know immediately.
+
+### Semantic versioning
+
+The project follows [Keep a Changelog](https://keepachangelog.com/) format:
+- v0.1.0: Core functionality (CLI, storage, tests)
+- v0.2.0: Engineering infrastructure (Docker, CI, Makefile, validation)
+
+## Project Review
+
+For a detailed retrospective on what I built, why, and what I learned, see [docs/project-review.md](docs/project-review.md).
 
 ## Roadmap
 
