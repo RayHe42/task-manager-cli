@@ -254,6 +254,10 @@ Planned features for future development:
 - [ ] Due date support
 - [ ] Color-coded terminal output
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, coding standards, and pull request guidelines.
+
 ## License
 
 This project is for learning purposes.
