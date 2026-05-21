@@ -1,5 +1,7 @@
 # Project Review: Task Manager CLI
 
+## Task Manager CLI 是我用来训练 Python 工程基础和 Claude Code 协作流程的第一个完整项目。它从一个简单的命令行任务管理工具开始，逐步加入了 pytest 测试、Docker、Docker volume、Docker Compose、Makefile、GitHub Actions CI、Pull Request 工作流和版本发布流程。这个项目的重点不是功能复杂度，而是把一个小工具按照真实工程项目的方式维护、测试、打包、运行和发布。
+
 ## 1. Project Overview
 
 Task Manager CLI is a command-line task management tool built with Python. Users add, list, complete, and remove tasks through terminal commands. All data is stored in a local JSON file — no database, no server, no external dependencies.
